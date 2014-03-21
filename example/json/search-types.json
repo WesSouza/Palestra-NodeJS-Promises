@@ -1,0 +1,5 @@
+[
+	{ "id": "hotel", "name": "Hotels" },
+	{ "id": "hostel", "name": "Hostels" },
+	{ "id": "apt", "name": "Apartments" }
+]

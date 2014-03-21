@@ -1,0 +1,5 @@
+[
+	{ "id": "1", "type": "hotel", "name": "Hotel Um", "extra": { "availableRooms": 1 } },
+	{ "id": "2", "type": "hotel", "name": "Hotel Two", "extra": { "availableRooms": 10 }  },
+	{ "id": "3", "type": "hostel", "name": "Hostel Drie", "extra": { "availableRooms": 2 }  }
+]

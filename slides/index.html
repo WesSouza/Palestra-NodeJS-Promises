@@ -1,0 +1,251 @@
+<!--
+Google IO 2012/2013 HTML5 Slide Template
+
+Authors: Eric Bidelman <ebidel@gmail.com>
+         Luke Mahé <lukem@google.com>
+
+URL: https://code.google.com/p/io-2012-slides
+-->
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="chrome=1">
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">-->
+  <!--<meta name="viewport" content="width=device-width, initial-scale=1.0">-->
+  <!--This one seems to work all the time, but really small on ipad-->
+  <!--<meta name="viewport" content="initial-scale=0.4">-->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <link rel="stylesheet" media="all" href="theme/css/default.css">
+  <link rel="stylesheet" media="only screen and (max-device-width: 480px)" href="theme/css/phone.css">
+  <base target="_blank"> <!-- This amazingness opens all links in a new tab. -->
+  <script data-main="js/slides" src="js/require-1.0.8.min.js"></script>
+</head>
+<body style="opacity: 0">
+
+<slides class="layout-widescreen">
+
+  <slide class="title-slide segue nobackground">
+    <aside class="gdbar"><img src="images/wesley.jpg"></aside>
+    <!-- The content of this hgroup is replaced programmatically through the slide_config.json. -->
+    <hgroup class="auto-fadein">
+      <h1 data-config-title><!-- populated from slide_config.json --></h1>
+      <h2 data-config-subtitle><!-- populated from slide_config.json --></h2>
+      <p data-config-presenter><!-- populated from slide_config.json --></p>
+    </hgroup>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>O inferno do Callback</h2>
+    </hgroup>
+    <article class="smaller">
+       <pre class="prettyprint" data-lang="javascript">
+get( 'http://example.org/service.api?format=json', function ( err, response ) {
+  if ( err ) {
+    <b>displayError( err );</b>
+  }
+  else {
+    try {
+      response = JSON.parse( response );
+      FB.api( '/me/feed', 'post', { message: response.message }, function ( response ) {
+        if ( !response || response.error ) {
+          <b>displayError( response.error || 'Error' );</b>
+        }
+        else {
+          posted( response.id );
+        }
+      } );
+    }
+    catch ( e ) {
+      <b>displayError( e );</b>
+    }
+  }
+} );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>O inferno do Callback</h2>
+      <h3>É uma zona</h3>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>O código fica ilegível</li>
+        <li>Indentação é correta, mas só piora o problema</li>
+        <li>Você precisa ler o código inteiro para se achar</li>
+        <li>Tratamentos de erro diferentes em múltiplos lugares</li>
+      </ul>
+      <div class="build">
+        <img src="images/screen-beans-pulling-hair.jpg" alt="">
+      </div>
+    </article>
+  </slide>
+
+  <slide class="fill nobackground" style="background-image: url(images/hope.jpg)">
+    <hgroup>
+      <h2 class="white">Mas há esperança!</h2>
+    </hgroup>
+    <footer class="source white">screamtour.com/good-morning-sun-300/</footer>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Promises</h2>
+      <h3>Nativo no EcmaScript 6</h3>
+    </hgroup>
+    <article>
+       <pre class="prettyprint" data-lang="javascript">
+get( 'http://example.org/service.api?format=json' )
+  .then( JSON.parse )
+  .then( function ( response ) {
+    return FBP.api( '/me/feed', 'post', { message: response.message } );
+  } )
+  .then( function ( response ) {
+    posted( response.id );
+  } )
+  .catch( function ( error ) {
+    <b>displayError( error );</b>
+  } );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Promises</h2>
+      <h3>É uma beleza</h3>
+    </hgroup>
+    <article>
+      <ul class="build">
+        <li>Código é simples e coerente</li>
+        <li>É muito fácil entender o que esta acontecendo</li>
+        <li>Lidar com erros é muito mais simples</li>
+      </ul>
+    </article>
+  </slide>
+
+  <slide class="segue dark nobackground">
+    <!-- <aside class="gdbar"><img src="images/wesley.jpg"></aside> -->
+    <hgroup class="auto-fadein">
+      <h2>Isso não é tudo!</h2>
+      <h3>Há mais benefícios com Promises</h3>
+    </hgroup>
+  </slide>
+  
+  <slide>
+    <hgroup>
+      <h2>Faça algo no final</h2>
+      <h3>Não importa o que aconteça</h3>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="javascript">
+loader.show();
+
+get( 'http://example.org/service.api?format=json' )
+  .then( doThis )
+  .then( doThat )
+  .then( doOneMoreThing )
+  .then( doTheLastThing )
+  .then( doTheRealLastThing )
+  .then( doTheLastestThing )
+  .catch( function ( error ) {
+    displayError( error );
+  } )
+  .then( loader.hide );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Fluxos complexos</h2>
+      <h3>Fáceis de entender</h3>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="javascript">
+get( 'http://example.org/service.api?format=json' )
+  .then( doThis )
+  .then( doThat )
+  .catch( thisOrThatBroke )
+  .then( doAnotherThingAnyway )
+  .catch( somethingElseBroke )
+  .then( finished );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Saiba quando tudo terminou</h2>
+      <h3>Não precisa mais contar toda hora</h3>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="javascript">
+var promises = [];
+
+promises.push( promiseEen() );
+promises.push( promiseDois() );
+promises.push( promiseThree() );
+
+Promise.all( promises ).then( function ( ) {
+  // it's all ready
+} );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Mesmo quano já foi resolvida</h2>
+      <h3>Faça um só código</h3>
+    </hgroup>
+    <article>
+      <pre class="prettyprint" data-lang="javascript">
+var myPromise = willReturnAPromise();
+
+// myPromise gets fullfilled.
+// A long time later, you call:
+
+myPromise.then( function ( ) {
+  // this will be called immediately
+} );</pre>
+    </article>
+  </slide>
+
+  <slide>
+    <hgroup>
+      <h2>Alguns poréns</h2>
+      <h3>Nada é perfeito</h3>
+    </hgroup>
+    <article>
+      <ul>
+        <li>Módulos precisam ser adaptados para funcionar com Promises</li>
+        <li>Uma Promise não é um evento, ela resolve apenas uma vez</li>
+        <li>Não há como quebrar um fluxo, ações em sequência sempre serão executadas</li>
+      </ul>
+    </article>
+  </slide>
+  
+  <slide>
+    <article class="flexbox vcenter">
+      <h1><a href="../example/">Demo</a></h1>
+      <footer class="source">Referência: html5rocks.com/en/tutorials/es6/promises/</footer>
+    </article>
+  </slide>
+
+  <slide class="thank-you-slide segue nobackground">
+    <aside class="gdbar right"><img src="images/wesley.jpg"></aside>
+    <article class="flexbox vleft auto-fadein">
+      <h2>&lt;Valeu!&gt;</h2>
+      <p>Perguntas?</p>
+    </article>
+    <p class="auto-fadein" data-config-contact>
+      <!-- populated from slide_config.json -->
+    </p>
+  </slide>
+
+  <slide class="backdrop"></slide>
+
+</slides>
+
+</body>
+</html>
